@@ -1,0 +1,15 @@
+# Node / TS
+node_modules/
+dist/
+build/
+coverage/
+
+# Env / local
+.env
+*.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
