@@ -28,8 +28,6 @@ Includes authentication (JWT) and basic CRUD APIs for projects.
 From `backend/`:
    ```bash
    npm run dev    # run in dev mode
-   npm run build  # compile TS → JS
-   npm start      # run built version
    ```
 Server should run on **http//:localhost:5000**
 
