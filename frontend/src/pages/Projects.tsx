@@ -3,15 +3,17 @@ import type { Project, Status } from "../types/project";
 import Modal from "../components/Modal";
 import ProjectCard from "../components/ProjectCard";
 import axios from "axios";
+import type { AxiosError } from "axios";
 
 const BASE_URL = import.meta.env.API_URL ?? "http://localhost:5000";
+
+type ErrBody = { message?: string; error?: string };
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // Add form state
   const [addOpen, setAddOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -67,15 +69,12 @@ export default function Projects() {
       });
       setProjects((prev) => prev.filter((p) => p.id !== id));
       setSelected(null);
-    } catch (err: any) {
-      console.log(
-        "DELETE /projects error:",
-        err?.response?.status,
-        err?.response?.data
-      );
+    } catch (err: unknown) {
+      const e = err as AxiosError<ErrBody>;
+      console.error("DELETE error:", e.response?.status, e.response?.data);
       const msg =
-        err?.response?.data?.error ||
-        err?.response?.data?.message ||
+        e.response?.data?.message ??
+        e.response?.data?.error ??
         "Failed to delete project";
       setError(msg);
       alert(msg);
@@ -186,7 +185,7 @@ export default function Projects() {
       {/* Details */}
       <Modal
         open={!!selected}
-        title={selected?.name}
+        title={selected?.title}
         onClose={() => setSelected(null)}
         maxWidthClass="max-w-2xl"
       >
@@ -208,7 +207,7 @@ export default function Projects() {
             <div className="pt-3 border-t flex gap-2 justify-end">
               <button
                 onClick={() => handleDelete(selected.id)}
-                className="px-4 py-2 bg-red-600 text-white rounded"
+                className="px-4 py-2 rounded-xl bg-red-600 text-white hover:opacity-90"
               >
                 Delete
               </button>
