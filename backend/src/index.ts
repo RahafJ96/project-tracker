@@ -33,9 +33,9 @@ app.get("/health", (_req, res) => {
   res.status(200).send("API is running 🚀");
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+const PORT = Number(process.env.PORT) || 5000;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Server listening on ${PORT}`);
 });
 
 export default app;
