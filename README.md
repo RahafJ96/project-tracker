@@ -74,5 +74,16 @@ Create a `.env` file in `frontend/` with:
    npm run dev
    ```
 
+---
 
-   
+## Database connection string (Render Postgres)
+DATABASE_URL= `postgresql://project_tracker_db_5esk_user:axUSda38Tp4ELuOWgSY7tAXamzBbSeQY@dpg-d3uivtbe5dus739ntme0-a.oregon-postgres.render.com/project_tracker_db_5esk`
+
+## JWT secret for signing tokens
+JWT_SECRET=`jwt_secret_key`
+
+## Allowed CORS origin (Frontend URL)
+CORS_ORIGIN= `In progress ...`
+
+## API base URL (your deployed backend)
+API_URL=https: `In progress ...`
