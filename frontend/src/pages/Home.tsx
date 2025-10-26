@@ -6,7 +6,7 @@ export default function Home() {
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white via-indigo-50 to-rose-50" />
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-4xl sm:text-5xl font-bold leading-tight">
-          Track projects with a
+          Track projects with a{" "}
           <span className="bg-gradient-to-r from-indigo-600 to-rose-600 bg-clip-text text-transparent">
             clean & modern
           </span>{" "}
@@ -20,7 +20,7 @@ export default function Home() {
           to="/projects"
           className="inline-flex items-center gap-2 mt-8 px-5 py-3 rounded-xl bg-gray-900 text-white hover:opacity-90 shadow-lg"
         >
-          🚀 Get started
+          Let's get started 🚀
         </Link>
       </div>
     </section>

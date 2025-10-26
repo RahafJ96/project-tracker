@@ -5,5 +5,5 @@ export interface Project {
   title: string;
   description: string;
   status: Status;
-  createdAt: string;
+  created_at: string;
 }

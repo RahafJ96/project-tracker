@@ -5,7 +5,8 @@ import ProjectCard from "../components/ProjectCard";
 import axios from "axios";
 import type { AxiosError } from "axios";
 
-const BASE_URL = import.meta.env.API_URL ?? "http://localhost:5000";
+const BASE_URL =
+  import.meta.env.API_URL ?? "https://project-tracker-tfie.onrender.com";
 
 type ErrBody = { message?: string; error?: string };
 
@@ -195,9 +196,9 @@ export default function Projects() {
               <span className="text-xs px-2 py-1 rounded-full border bg-white">
                 {selected.status}
               </span>
-              {selected.createdAt && (
+              {selected.created_at && (
                 <span className="text-xs text-gray-500">
-                  Created: {new Date(selected.createdAt).toLocaleString()}
+                  Created: {new Date(selected.created_at).toLocaleDateString()}
                 </span>
               )}
             </div>

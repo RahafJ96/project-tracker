@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-const BASE_URL = import.meta.env.API_URL ?? "http://localhost:5000";
+const BASE_URL =
+  import.meta.env.API_URL ?? "https://project-tracker-tfie.onrender.com";
 
 export default function Register() {
   const [name, setName] = useState("");

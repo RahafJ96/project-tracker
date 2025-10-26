@@ -36,7 +36,7 @@ export default function ProjectCard({ project, onOpen }: Props) {
           {project.description}
         </p>
         <div className="mt-3 text-[11px] text-gray-400">
-          {new Date(project.createdAt).toLocaleDateString()}
+          {new Date(project.created_at).toLocaleDateString()}
         </div>
       </div>
     </button>
