@@ -84,6 +84,3 @@ JWT_SECRET=`jwt_secret_key`
 
 ## Allowed CORS origin (Frontend URL)
 CORS_ORIGIN= `In progress ...`
-
-## API base URL (your deployed backend)
-API_URL=https: `In progress ...`
