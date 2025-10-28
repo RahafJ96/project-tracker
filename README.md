@@ -58,6 +58,11 @@ Use the `Authorization: Bearer <token>` header in all project requests.
 
 ## 🖥️ Frontend (React + Vite + Tailwind CSS)
 
+A simple `React.js` + `TypeScript` + `Vite` + `Tailwind CSS` frontend for tracking projects.
+Includes 3 main Pages `Home` + `List of Projects` + `Login & Registeration`
+
+---
+
 ### ⚙️ Set up
 1. Install dependencies
    ```bash
