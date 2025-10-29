@@ -89,3 +89,7 @@ API_URL = `https://project-tracker-tfie.onrender.com/`
 
 ## Frontend URL:
 FE_URL = `https://project-tracker-ra.netlify.app/`
+
+
+## Live demo:
+[Click here to view the live app](https://project-tracker-ra.netlify.app/)
