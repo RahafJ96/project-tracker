@@ -29,10 +29,7 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 app.use("/auth", authRouter);
 app.use("/projects", projectRouter);
 
-app.get("/health", (_req, res) => {
-  res.status(200).send("API is running 🚀");
-});
-
+// Start server
 const PORT = Number(process.env.PORT) || 5000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Server listening on ${PORT}`);

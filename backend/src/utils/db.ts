@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import "dotenv/config";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -18,5 +19,5 @@ pool.query("select 1").then(
       !!(process.env.NODE_ENV === "production"),
       ")"
     ),
-  (e) => console.error("⚠️ DB check failed:", e.message)
+  (e) => console.error("⚠️  DB check failed:", e.message)
 );

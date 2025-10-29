@@ -30,13 +30,13 @@ export async function createProject(req: AuthedRequest, res: Response) {
   if (!title) return res.status(400).json({ error: "title required" });
 
   const valid = ["planning", "active", "paused", "done"];
-  const statusValue = valid.includes(status) ? status : undefined;
+  const statusValue = valid.includes(status) ? status : "active";
 
   const r = await pool.query(
-    `INSERT INTO projects (user_id, title, description)
-   VALUES ($1::uuid, $2, $3)
-   RETURNING id, title, description, status, created_at, updated_at`,
-    [req.userId, title, description ?? null]
+    `INSERT INTO projects (user_id, title, description, status)
+     VALUES ($1::uuid, $2, $3, $4)
+     RETURNING id, title, description, status, created_at, updated_at`,
+    [req.userId, title, description ?? null, statusValue]
   );
   res.status(201).json(r.rows[0]);
 }

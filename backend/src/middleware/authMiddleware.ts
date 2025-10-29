@@ -29,7 +29,7 @@ export function auth(req: AuthedRequest, res: Response, next: NextFunction) {
       return res.status(401).json({ error: "Invalid token subject" });
     }
 
-    req.userId = decoded.sub; // <-- no Number(...)
+    req.userId = decoded.sub;
     next();
   } catch {
     return res.status(401).json({ error: "Invalid token" });

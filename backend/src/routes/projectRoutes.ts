@@ -14,5 +14,5 @@ projectRouter.use(auth);
 projectRouter.get("/", listProjects);
 projectRouter.get("/:id", getProjectById);
 projectRouter.post("/", createProject);
-projectRouter.put("/:id", updateProject);
+projectRouter.put("/:id", updateProject); // not ready yet
 projectRouter.delete("/:id", deleteProject);
