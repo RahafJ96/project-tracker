@@ -8,6 +8,22 @@ import type { AxiosError } from "axios";
 const BASE_URL =
   import.meta.env.API_URL ?? "https://project-tracker-tfie.onrender.com";
 
+function chip(status: Project["status"]) {
+  const base = "text-xs px-2 py-1 rounded-full border";
+  switch (status) {
+    case "active":
+      return `${base} bg-emerald-50 text-emerald-700 border-emerald-200`;
+    case "planning":
+      return `${base} bg-indigo-50 text-indigo-700 border-indigo-200`;
+    case "paused":
+      return `${base} bg-amber-50 text-amber-700 border-amber-200`;
+    case "done":
+      return `${base} bg-slate-100 text-slate-700 border-slate-200`;
+    default:
+      return `${base} bg-gray-100 text-gray-700 border-gray-200`;
+  }
+}
+
 type ErrBody = { message?: string; error?: string };
 
 export default function Projects() {
@@ -192,10 +208,8 @@ export default function Projects() {
       >
         {selected ? (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs px-2 py-1 rounded-full border bg-white">
-                {selected.status}
-              </span>
+            <div className="container mx-auto flex items-center justify-between">
+              <span className={chip(selected.status)}>{selected.status}</span>
               {selected.created_at && (
                 <span className="text-xs text-gray-500">
                   Created: {new Date(selected.created_at).toLocaleDateString()}
