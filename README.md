@@ -8,7 +8,7 @@ Includes authentication (JWT) and basic CRUD APIs for projects.
 ---
 
 
-### ⚙️ Setup - BE
+### ⚙️ Setup Backend - BE
 
 1. Clone repository:
    ```bash
@@ -17,11 +17,13 @@ Includes authentication (JWT) and basic CRUD APIs for projects.
 2. Install dependencies:
    ```bash
    npm install
-3. Database with Docker:
+   
+### ⚙️ Setup Database - DB
+1. Database with Docker:
    ```bash
    cd ../database
    docker compose up -d
-4. Install dependencies:
+2. Run the `schema.sql`:
    ```bash
    docker exec -i database-db-1 psql -U app -d project_tracker < schema.sql
 ---
@@ -63,7 +65,7 @@ Includes 3 main Pages `Home` + `List of Projects` + `Login & Registeration`
 
 ---
 
-### ⚙️ Set up
+### ⚙️ Set up Frontend - FE:
 1. Install dependencies
    ```bash
    cd frontend
