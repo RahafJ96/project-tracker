@@ -1,11 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router";
+import { ENV } from "../config/env";
 
-const BASE_URL =
-  import.meta.env.API_URL ?? "https://project-tracker-tfie.onrender.com";
-
-console.log(BASE_URL, import.meta.env.API_URL, "BASE_URL");
+const BASE_URL = ENV.API_URL;
 
 export default function Login() {
   const [email, setEmail] = useState("");

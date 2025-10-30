@@ -4,9 +4,10 @@ import Modal from "../components/Modal";
 import ProjectCard from "../components/ProjectCard";
 import axios from "axios";
 import type { AxiosError } from "axios";
+import { Edit3, Trash2, X, Save } from "lucide-react";
+import { ENV } from "../config/env";
 
-const BASE_URL =
-  import.meta.env.API_URL ?? "https://project-tracker-tfie.onrender.com";
+const BASE_URL = ENV.API_URL;
 
 function chip(status: Project["status"]) {
   const base = "text-xs px-2 py-1 rounded-full border";
@@ -38,6 +39,17 @@ export default function Projects() {
 
   const [selected, setSelected] = useState<Project | null>(null);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<{
+    title: string;
+    description: string;
+    status: Status;
+  }>({
+    title: "",
+    description: "",
+    status: "planning",
+  });
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -49,6 +61,16 @@ export default function Projects() {
       .catch(() => setError("Failed to load projects"))
       .finally(() => setLoading(false));
   }, [token]);
+
+  useEffect(() => {
+    if (!selected) return;
+    setIsEditing(false);
+    setEditForm({
+      title: selected.title ?? "",
+      description: selected.description ?? "",
+      status: selected.status ?? "planning",
+    });
+  }, [selected]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +98,38 @@ export default function Projects() {
       setSelected(res.data);
     } catch {
       setError("Failed to load project details");
+    }
+  };
+
+  const handleUpdate = async (id: number) => {
+    try {
+      const res = await axios.put(
+        `${BASE_URL}/projects/${id}`,
+        {
+          title: editForm.title.trim(),
+          description: editForm.description,
+          status: editForm.status,
+        },
+        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+      );
+
+      const updated = res.data as Project;
+
+      // update the list
+      setProjects((prev) =>
+        prev.map((p) => (p.id === updated.id ? updated : p))
+      );
+      // update the modal’s selected copy
+      setSelected(updated);
+      setIsEditing(false);
+    } catch (err: unknown) {
+      const e = err as AxiosError<ErrBody>;
+      const msg =
+        e.response?.data?.message ??
+        e.response?.data?.error ??
+        "Failed to update project";
+      setError(msg);
+      alert(msg);
     }
   };
 
@@ -202,30 +256,143 @@ export default function Projects() {
       {/* Details */}
       <Modal
         open={!!selected}
-        title={selected?.title}
         onClose={() => setSelected(null)}
         maxWidthClass="max-w-2xl"
       >
         {selected ? (
           <div className="space-y-4">
-            <div className="container mx-auto flex items-center justify-between">
-              <span className={chip(selected.status)}>{selected.status}</span>
-              {selected.created_at && (
-                <span className="text-xs text-gray-500">
-                  Created: {new Date(selected.created_at).toLocaleDateString()}
-                </span>
+            {/* Header: Title (left) + Edit/Update buttons (right) */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold truncate">
+                {isEditing ? editForm.title || "Untitled" : selected.title}
+              </h2>
+
+              {!isEditing ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-3 py-2 rounded-xl bg-yellow-500 text-white hover:opacity-90"
+                  >
+                    <Edit3 size={18} />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(selected.id)}
+                    className="px-4 py-2 rounded-xl bg-red-600 text-white hover:opacity-90"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleUpdate(selected.id)}
+                    className="px-3 py-2 rounded-xl bg-blue-600 text-white hover:opacity-90"
+                  >
+                    <Save size={18} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      // revert edits
+                      setEditForm({
+                        title: selected.title ?? "",
+                        description: selected.description ?? "",
+                        status: selected.status ?? "planning",
+                      });
+                      setIsEditing(false);
+                    }}
+                    className="px-3 py-1.5 rounded-xl border hover:bg-gray-50"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               )}
             </div>
-            <p className="text-gray-700 whitespace-pre-wrap">
-              {selected.description || "No description."}
-            </p>
-            <div className="pt-3 border-t flex gap-2 justify-end">
-              <button
-                onClick={() => handleDelete(selected.id)}
-                className="px-4 py-2 rounded-xl bg-red-600 text-white hover:opacity-90"
+
+            {/* Status + created_at */}
+            <div className="flex items-center justify-between">
+              <span
+                className={chip(isEditing ? editForm.status : selected.status)}
               >
-                Delete
-              </button>
+                {isEditing ? editForm.status : selected.status}
+              </span>
+              <span className="space-x-4">
+                {selected.created_at && (
+                  <span className="text-xs text-gray-500">
+                    Created:{" "}
+                    {new Date(selected.created_at).toLocaleDateString()}
+                  </span>
+                )}
+                {selected.updated_at && (
+                  <span className="text-xs text-gray-500">
+                    Updated:{" "}
+                    {new Date(selected.updated_at).toLocaleDateString()}
+                  </span>
+                )}
+              </span>
+            </div>
+
+            {/* Title input (enabled only in edit mode) */}
+            <div>
+              <label className="block text-sm mb-1">Title</label>
+              <input
+                className={`w-full border rounded-xl px-3 py-2 outline-none ${
+                  isEditing
+                    ? "focus:ring-2 focus:ring-indigo-200"
+                    : "bg-gray-50 text-gray-600"
+                }`}
+                disabled={!isEditing}
+                value={isEditing ? editForm.title : selected.title}
+                onChange={(e) =>
+                  setEditForm((f) => ({ ...f, title: e.target.value }))
+                }
+              />
+            </div>
+
+            {/* Status select */}
+            <div>
+              <label className="block text-sm mb-1">Status</label>
+              <select
+                className={`w-full border rounded-xl px-3 py-2 ${
+                  isEditing ? "" : "bg-gray-50 text-gray-600"
+                }`}
+                disabled={!isEditing}
+                value={isEditing ? editForm.status : selected.status}
+                onChange={(e) =>
+                  setEditForm((f) => ({
+                    ...f,
+                    status: e.target.value as Status,
+                  }))
+                }
+              >
+                <option value="planning">Planning</option>
+                <option value="active">Active</option>
+                <option value="paused">Paused</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+
+            {/* Description textarea */}
+            <div>
+              <label className="block text-sm mb-1">Description</label>
+              <textarea
+                className={`w-full border rounded-xl px-3 py-2 min-h-[100px] outline-none ${
+                  isEditing
+                    ? "focus:ring-2 focus:ring-indigo-200"
+                    : "bg-gray-50 text-gray-600"
+                }`}
+                disabled={!isEditing}
+                value={
+                  isEditing ? editForm.description : selected.description ?? ""
+                }
+                onChange={(e) =>
+                  setEditForm((f) => ({ ...f, description: e.target.value }))
+                }
+                placeholder="What is this project about?"
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="pt-3 border-t flex gap-2 justify-end">
               <button
                 onClick={() => setSelected(null)}
                 className="px-4 py-2 rounded-xl border hover:bg-gray-50"
